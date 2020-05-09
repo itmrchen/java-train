@@ -19,8 +19,13 @@ public class PersonTest {
         /*List<Person> personResult = personTest.getPersonsByUsername("zhangsan", personList);
         personResult.forEach(person -> System.out.println(person.toString()));*/
 
-        List<Person> personResult = personTest.getPersonsByAge(14, personList);
-        personResult.forEach(person -> System.out.println(person.toString()));
+        /*List<Person> personResult = personTest.getPersonsByAge(14, personList);
+        personResult.forEach(person -> System.out.println(person.toString()));*/
+
+        List<Person> persons = personTest.getPersonListByAge(14,personList,(age,personsList)->{
+            return personList.stream().filter(person -> person.getAge()>age).collect(Collectors.toList());
+        });
+        persons.forEach(person -> System.out.println(person));
 
     }
 
@@ -30,7 +35,11 @@ public class PersonTest {
 
     public List<Person> getPersonsByAge(int age, List<Person> personList) {
         BiFunction<Integer, List<Person>, List<Person>> biFunction = (ageOfPerson, persons) ->
-             persons.stream().filter(person -> person.getAge() > ageOfPerson).collect(Collectors.toList());
+                persons.stream().filter(person -> person.getAge() > ageOfPerson).collect(Collectors.toList());
+        return biFunction.apply(age, personList);
+    }
+
+    public List<Person> getPersonListByAge(int age, List<Person> personList, BiFunction<Integer, List<Person>, List<Person>> biFunction) {
         return biFunction.apply(age, personList);
     }
 }
